@@ -41,7 +41,7 @@ providers = [
 ]
 
 for provider in providers:
-    command = '''sed -i '' -e 's@image: .*@image: '"{}"'@' ./{}/config/default/manager_image_patch.yaml'''.format(provider['image'], provider['name'])
+    command = '''sed -i -e 's@image: .*@image: '"{}"'@' ./{}/config/default/manager_image_patch.yaml'''.format(provider['image'], provider['name'])
     local(command)
     kustomizedir = './' + provider['name'] + '/config/default'
     # listdir(kustomizedir)
@@ -74,6 +74,7 @@ docker_build(infrastructure_image, dir(infrastructure_provider),
     live_update=[
         sync(dir(infrastructure_provider, "controllers"), '/workspace/controllers'),
         sync(dir(infrastructure_provider, "cmd", "manager", "main.go"), '/workspace/cmd/manager/main.go'),
+        sync(dir(infrastructure_provider, 'api'), '/workspace/api'),
         run('go install -v ./cmd/manager'),
         run('mv /go/bin/manager /manager'),
         run('./restart.sh'),])
