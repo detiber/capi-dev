@@ -1,5 +1,5 @@
 {
-  "repo_root_dir": "/home/detiber/go/src/sigs.k8s.io",
+  "default_repo_root": "/home/detiber/go/src/sigs.k8s.io",
   "default_registry": "gcr.io/jason-heptio",
   "default_core_image": "gcr.io/jason-heptio/cluster-api-controller:dev",
   "default_bootstrap_image": "gcr.io/jason-heptio/cluster-api-bootstrap-provider:dev",
