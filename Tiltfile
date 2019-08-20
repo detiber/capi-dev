@@ -2,28 +2,18 @@ enable_feature("snapshots")
 
 allow_k8s_contexts('kubernetes-admin@kubernetes')
 
-DOCKER_PROVIDER='cluster-api-provider-docker'
-AWS_PROVIDER='cluster-api-provider-aws'
-
-
-# proj is the base dir
-# args will be joined after the project if args exist
-def dir(proj, *args):
-    path = list(args)
-    path.insert(0,proj)
-    path.insert(0,'.')
-    return '/'.join(path)
-
 settings = read_json('config.json', default={})
 default_registry(settings.get('default_registry'))
 
 core_provider = 'cluster-api'
 bootstrap_provider = 'cluster-api-bootstrap-provider-kubeadm'
-infrastructure_provider = DOCKER_PROVIDER
+docker_provider = 'cluster-api-provider-docker'
+aws_provider = 'cluster-api-provider-aws'
 
 core_image = settings.get('default_core_image')
 bootstrap_image = settings.get('default_bootstrap_image')
-infrastructure_image = settings.get('default_infrastructure_image')
+docker_image = settings.get('default_docker_image')
+aws_image = settings.get('default_aws_image')
 
 providers = [
     {
@@ -35,9 +25,13 @@ providers = [
         'image': bootstrap_image,
     },
     {
-        'name': infrastructure_provider,
-        'image': infrastructure_image,
+        'name': docker_provider,
+        'image': docker_image,
     },
+#    {
+#        'name': aws_provider,
+#        'image': aws_image,
+#    },
 ]
 
 for provider in providers:
@@ -47,21 +41,14 @@ for provider in providers:
     # listdir(kustomizedir)
     k8s_yaml(kustomize(kustomizedir))
 
-docker_build(core_image, './cluster-api')
+docker_build(core_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api')
 
-docker_build(bootstrap_image, dir(bootstrap_provider))
+docker_build(bootstrap_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api-bootstrap-provider-kubeadm')
 
-## Uncomment one of the two depending on which infrastructure provider you are using
+## Uncomment one of the two depending on which docker provider you are using
 
 # # aws provider
-# docker_build(infrastructure_image, dir(infrastructure_provider),
-#     live_update=[
-#         sync(dir(infrastructure_provider, "pkg"), '/workspace/pkg'),
-#         sync(dir(infrastructure_provider, "main.go"), '/workspace/main.go'),
-#         run('go install -v ./cmd/manager'),
-#         run('mv /go/bin/manager /manager'),
-#         run('./restart.sh'),])
+# docker_build(docker_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api-provider-aws')
 
 # docker provider
-docker_build(infrastructure_image, dir(infrastructure_provider))
-
+docker_build(docker_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api-provider-docker')

@@ -2,5 +2,6 @@
   "default_registry": "gcr.io/jason-heptio",
   "default_core_image": "gcr.io/jason-heptio/cluster-api-controller:dev",
   "default_bootstrap_image": "gcr.io/jason-heptio/cluster-api-bootstrap-provider:dev",
-  "default_infrastructure_image": "gcr.io/jason-heptio/manager:dev"
+  "default_docker_image": "gcr.io/jason-heptio/manager:dev",
+  "default_aws_image": "gcr.io/jason-heptio/cluster-api-provider-aws:dev"
 }
