@@ -4,6 +4,7 @@ allow_k8s_contexts('kubernetes-admin@kubernetes')
 
 settings = read_json('config.json', default={})
 default_registry(settings.get('default_registry'))
+default_repo_root(settings.get('default_repo_root'))
 
 core_provider = 'cluster-api'
 bootstrap_provider = 'cluster-api-bootstrap-provider-kubeadm'
@@ -19,36 +20,40 @@ providers = [
     {
         'name': core_provider,
         'image': core_image,
+        'repo': 'default_repo_root' + core_provider,
     },
     {
         'name': bootstrap_provider,
         'image': bootstrap_image,
+        'repo': 'default_repo_root' + bootstrap_provider,
     },
     {
         'name': docker_provider,
         'image': docker_image,
+        'repo': 'default_repo_root' + docker_provider,
     },
-#    {
-#        'name': aws_provider,
-#        'image': aws_image,
-#    },
+    {
+        'name': aws_provider,
+        'image': aws_image,
+        'repo': 'default_repo_root' + aws_provider,
+    },
 ]
 
 for provider in providers:
-    command = '''sed -i -e 's@image: .*@image: '"{}"'@' ./{}/config/default/manager_image_patch.yaml'''.format(provider['image'], provider['name'])
+    command = '''sed -i -e 's@image: .*@image: '"{}"'@' {}/config/default/manager_image_patch.yaml'''.format(provider['image'], provider['repo'])
     local(command)
-    kustomizedir = './' + provider['name'] + '/config/default'
+    kustomizedir = provider['repo'] + '/config/default'
     # listdir(kustomizedir)
     k8s_yaml(kustomize(kustomizedir))
 
-docker_build(core_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api')
+# core capi
+docker_build(core_image, 'default_repo_root' + core_provider)
 
-docker_build(bootstrap_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api-bootstrap-provider-kubeadm')
+# bootstrap provider
+docker_build(bootstrap_image, 'default_repo_root' + bootstrap_provider)
 
-## Uncomment one of the two depending on which docker provider you are using
-
-# # aws provider
-# docker_build(docker_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api-provider-aws')
+# aws provider
+docker_build(docker_image, 'default_repo_root' + aws_provider)
 
 # docker provider
-docker_build(docker_image, '/home/detiber/go/src/sigs.k8s.io/cluster-api-provider-docker')
+docker_build(docker_image, 'default_repo_root' + docker_provider)
