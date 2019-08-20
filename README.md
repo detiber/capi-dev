@@ -8,7 +8,7 @@ Run `./init.sh`. This will clone some basic providers for you to try.
 
 ## Install Tilt
 
-https://docs.tilt.dev/install.html
+<https://docs.tilt.dev/install.html>
 
 ## Get a kubernetes cluster
 
