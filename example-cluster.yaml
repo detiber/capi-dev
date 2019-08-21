@@ -20,18 +20,7 @@ apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
 metadata:
   name: test-config
 spec:
-  clusterConfiguration:
-    certificatesDir: ""
-    controlPlaneEndpoint: ""
-    dns:
-      type: ""
-    imageRepository: ""
-    kubernetesVersion: ""
-    networking:
-      dnsDomain: ""
-      podSubnet: ""
-      serviceSubnet: ""
-    etcd: {}
+  clusterConfiguration: {}
 ---
 kind: DockerMachine
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
