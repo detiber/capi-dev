@@ -21,11 +21,11 @@ metadata:
   name: test-config
 spec:
   clusterConfiguration: {}
----
-kind: DockerMachine
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
-metadata:
-  name: test-machine
+# ---
+# kind: DockerMachine
+# apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+# metadata:
+#   name: test-machine
 ---
 kind: Machine
 apiVersion: cluster.x-k8s.io/v1alpha2
@@ -43,9 +43,9 @@ spec:
       apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
       namespace: default
       name: test-config
-  infrastructureRef:
-    kind: DockerMachine
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
-    namespace: default
-    name: test-machine
+  # infrastructureRef:
+  #   kind: DockerMachine
+  #   apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+  #   namespace: default
+  #   name: test-machine
   version: "v1.15.0"

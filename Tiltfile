@@ -39,11 +39,17 @@ providers = [
     },
 ]
 
+
+
 for provider in providers:
+    if provider['name'] == aws_provider:
+        b64credentials = local("clusterawsadm alpha bootstrap encode-aws-credentials | tr -d '\n'")
+        command = '''sed -i -e 's@credentials: .*@credentials: '"{}"'@' {}/config/manager/credentials.yaml'''.format(b64credentials, provider['repo'])
+        local(command)
+
+    kustomizedir = provider['repo'] + '/config/default'
     command = '''sed -i -e 's@image: .*@image: '"{}"'@' {}/config/default/manager_image_patch.yaml'''.format(provider['image'], provider['repo'])
     local(command)
-    kustomizedir = provider['repo'] + '/config/default'
-    # listdir(kustomizedir)
     k8s_yaml(kustomize(kustomizedir))
 
 # core capi
