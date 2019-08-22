@@ -1,26 +1,29 @@
 kind: AWSCluster
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-cluster
+  name: test-a
 spec:
   region: us-east-1
 ---
 kind: Cluster
 apiVersion: cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-cluster
+  name: test-a
   namespace: default
 spec:
+  clusterNetwork:
+    pods:
+      cidrBlocks: ["192.168.0.0/16"]
   infrastructureRef:
     kind: AWSCluster
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
-    name: test-cluster
+    name: test-a
     namespace: default
 ---
 kind: KubeadmConfig
 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-config
+  name: test-a
 spec:
   initConfiguration:
     nodeRegistration:
@@ -34,41 +37,22 @@ spec:
     controllerManager:
       extraArgs:
         cloud-provider: aws
-  files:
-    - path: /hello.txt
-      content: hello
-      permissions: '0644'
-      owner: detiber:detiber
-  ntp:
-    enabled: true
-    servers:
-      - 0.pool.ntp.org
-      - 1.pool.ntp.org
-      - 2.pool.ntp.org
-      - 3.pool.ntp.org
-  users:
-    - name: detiber
-      gecos: detiber
-      groups: wheel
-      sshAuthorizedKeys:
-        - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsBAPUMwg/8M9S4Kjh0jnVILNvLjE1mcyCNx5k5d+03yY6nFdUJwJuUbXhqz/Rm+LwwRme4GXgSQKBxWu6YU0+QYMZZJUDdSy2+O47OKe/UzrdOAIOyW/OvTsJ/mgt9whK01DsdrgfKZteGiKw1fYEkQdmzB31/Hqyv+rKH7plGwPUTEwcs0zWj+PZekUKM5XGbM0L8ky9HDlIrzRy7rMdAS6ip6HybXNAU+yFlD8US3OTrmrJUMBnI0Ox+Yq2gTHb1K/r6pBhTAMDUdqHE1zADy8azEGX0Cifn+qOf642DiDvJCE1u9cYpRPnQ0JSCN65iF/Nm5v95s05F0gjtZ2/ detiber@yeti.local.detiberus.net"
-    - name: user2
-      gecos: Fake User
 ---
 kind: AWSMachine
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-machine
+  name: test-a
 spec:
   instanceType: t3.large
+  iamInstanceProfile: "control-plane.cluster-api-provider-aws.sigs.k8s.io"
 ---
 kind: Machine
 apiVersion: cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-machine
+  name: test-a
   namespace: default
   labels:
-    cluster.x-k8s.io/cluster-name: test-cluster
+    cluster.x-k8s.io/cluster-name: test-a
     cluster.x-k8s.io/control-plane: "true"
     set: controlplane
 spec:
@@ -77,10 +61,10 @@ spec:
       kind: KubeadmConfig
       apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
       namespace: default
-      name: test-config
+      name: test-a
   infrastructureRef:
     kind: AWSMachine
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
     namespace: default
-    name: test-machine
+    name: test-a
   version: "v1.14.4"
