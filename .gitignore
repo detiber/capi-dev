@@ -1,3 +1,6 @@
 cluster-api*
 .idea
 .vscode
+go.mod
+go.sum
+test.kubeconfig

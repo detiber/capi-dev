@@ -4,7 +4,8 @@ This repo houses some tools to make running Cluster API v1alpha2 a little bit ea
 
 ## Repo Setup
 
-Run `./init.sh`. This will clone some basic providers for you to try.
+- Modify config.json for your environment
+- Referenced repositories are expected to be already checked out under the `default_repo_root` defined in config.json
 
 ## Install Tilt
 
