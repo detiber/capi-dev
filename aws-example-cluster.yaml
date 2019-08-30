@@ -1,14 +1,15 @@
+---
 kind: AWSCluster
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-a
+  name: awscluster-a
 spec:
   region: us-east-1
 ---
 kind: Cluster
 apiVersion: cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-a
+  name: cluster-a
   namespace: default
 spec:
   clusterNetwork:
@@ -17,13 +18,13 @@ spec:
   infrastructureRef:
     kind: AWSCluster
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
-    name: test-a
+    name: awscluster-a
     namespace: default
 ---
 kind: KubeadmConfig
 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-a
+  name: kubeadmconfig-a-cp-0
 spec:
   initConfiguration:
     nodeRegistration:
@@ -41,7 +42,7 @@ spec:
 kind: AWSMachine
 apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-a
+  name: awsmachine-a-cp-0
 spec:
   instanceType: t3.large
   iamInstanceProfile: "control-plane.cluster-api-provider-aws.sigs.k8s.io"
@@ -49,22 +50,105 @@ spec:
 kind: Machine
 apiVersion: cluster.x-k8s.io/v1alpha2
 metadata:
-  name: test-a
+  name: machine-a-cp-0
   namespace: default
   labels:
-    cluster.x-k8s.io/cluster-name: test-a
+    cluster.x-k8s.io/cluster-name: cluster-a
     cluster.x-k8s.io/control-plane: "true"
-    set: controlplane
 spec:
   bootstrap:
     configRef:
       kind: KubeadmConfig
       apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
       namespace: default
-      name: test-a
+      name: kubeadmconfig-a-cp-0
   infrastructureRef:
     kind: AWSMachine
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
     namespace: default
-    name: test-a
+    name: awsmachine-a-cp-0
+  version: "v1.15.3"
+---
+kind: KubeadmConfig
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
+metadata:
+  name: kubeadmconfig-a-cp-1
+spec:
+  joinConfiguration:
+    controlPlane: {}
+    nodeRegistration:
+      name: '{{ ds.meta_data.hostname }}'
+      kubeletExtraArgs:
+        cloud-provider: aws
+---
+kind: AWSMachine
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+metadata:
+  name: awsmachine-a-cp-1
+spec:
+  instanceType: t3.large
+  iamInstanceProfile: "control-plane.cluster-api-provider-aws.sigs.k8s.io"
+---
+kind: Machine
+apiVersion: cluster.x-k8s.io/v1alpha2
+metadata:
+  name: machine-a-cp-1
+  namespace: default
+  labels:
+    cluster.x-k8s.io/cluster-name: cluster-a
+    cluster.x-k8s.io/control-plane: "true"
+spec:
+  bootstrap:
+    configRef:
+      kind: KubeadmConfig
+      apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
+      namespace: default
+      name: kubeadmconfig-a-cp-1
+  infrastructureRef:
+    kind: AWSMachine
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+    namespace: default
+    name: awsmachine-a-cp-1
+  version: "v1.15.3"
+---
+kind: KubeadmConfig
+apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
+metadata:
+  name: kubeadmconfig-a-cp-2
+spec:
+  joinConfiguration:
+    controlPlane: {}
+    nodeRegistration:
+      name: '{{ ds.meta_data.hostname }}'
+      kubeletExtraArgs:
+        cloud-provider: aws
+---
+kind: AWSMachine
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+metadata:
+  name: awsmachine-a-cp-2
+spec:
+  instanceType: t3.large
+  iamInstanceProfile: "control-plane.cluster-api-provider-aws.sigs.k8s.io"
+---
+kind: Machine
+apiVersion: cluster.x-k8s.io/v1alpha2
+metadata:
+  name: machine-a-cp-2
+  namespace: default
+  labels:
+    cluster.x-k8s.io/cluster-name: cluster-a
+    cluster.x-k8s.io/control-plane: "true"
+spec:
+  bootstrap:
+    configRef:
+      kind: KubeadmConfig
+      apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
+      namespace: default
+      name: kubeadmconfig-a-cp-2
+  infrastructureRef:
+    kind: AWSMachine
+    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
+    namespace: default
+    name: awsmachine-a-cp-2
   version: "v1.15.3"
