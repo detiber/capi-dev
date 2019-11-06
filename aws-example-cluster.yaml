@@ -67,7 +67,7 @@ spec:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
     namespace: default
     name: awsmachine-a-cp-0
-  version: "v1.15.3"
+  version: "v1.16.2"
 ---
 kind: KubeadmConfig
 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
@@ -109,7 +109,7 @@ spec:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
     namespace: default
     name: awsmachine-a-cp-1
-  version: "v1.15.3"
+  version: "v1.16.2"
 ---
 kind: KubeadmConfig
 apiVersion: bootstrap.cluster.x-k8s.io/v1alpha2
@@ -151,4 +151,4 @@ spec:
     apiVersion: infrastructure.cluster.x-k8s.io/v1alpha2
     namespace: default
     name: awsmachine-a-cp-2
-  version: "v1.15.3"
+  version: "v1.16.2"
